@@ -5,6 +5,7 @@ from tasks.product_or_private import product_or_private_4
 from tasks.roots_separation import separate_roots_5
 from tasks.half_and_iteration_method import half_and_iteration_6
 from tasks.method_hord import hord_method_7
+from tasks.sale_gauss import gauss_method_8
 
 task = input('''1. Абсолютная погрешность
 2. Относительная погрешность
@@ -13,6 +14,7 @@ task = input('''1. Абсолютная погрешность
 5. Отделение корня уравнения
 6. Решения уравнения методом деления корня пополам или методом итераций
 7. Решение уравнения методом хорд
+8. Решение СЛАУ методом Гаусса
 Выберите задание: ''')
 # Обработка каждой задачи на основе пользовательского ввода
 
@@ -30,3 +32,5 @@ elif task == '6':
     half_and_iteration_6()
 elif task == '7':
     hord_method_7()
+elif task == '8':
+    gauss_method_8()
