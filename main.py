@@ -6,6 +6,7 @@ from tasks.roots_separation import separate_roots_5
 from tasks.half_and_iteration_method import half_and_iteration_6
 from tasks.method_hord import hord_method_7
 from tasks.sale_gauss import gauss_method_8
+from tasks.newton_cotes import newton_cotes_16
 
 task = input('''1. Абсолютная погрешность
 2. Относительная погрешность
@@ -34,3 +35,5 @@ elif task == '7':
     hord_method_7()
 elif task == '8':
     gauss_method_8()
+elif task == '16':
+    newton_cotes_16()
