@@ -21,6 +21,14 @@ def is_monotonic(f, A, B, step=0.1):
 
     return True
 
+# Определяем функцию для вычисления значения многочлена Ньютона
+def newton_poly(x, y):
+    n = len(x)
+    for j in range(1, n):
+        for i in range(n-1, j-1, -1):
+            y[i] = (y[i] - y[i-1]) / (x[i] - x[i-j])
+    return y
+
 # Функция нахождения производной обобщенного уравнения
 def find_derivative(coeffs, powers):
     derivative_coeffs = [coeff * power for coeff, power in zip(coeffs, powers)]
