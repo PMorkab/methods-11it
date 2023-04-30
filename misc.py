@@ -1,4 +1,6 @@
 import math
+import numpy as np
+
 # Функция для расчета абсолютной погрешности
 def absolute_error(x1, x2):
     return round(abs(x1 - x2),4)
@@ -114,3 +116,104 @@ def multiply_divide(least_decimal_places, operation, values):
     rounded_values = round_values(values, least_decimal_places)
     result = perform_operation(operation, rounded_values)
     return round(result, least_decimal_places)
+
+# Решение дифференциального уравнения методом Эйлера
+def euler(x0, y0, h, x_end):
+    x = x0
+    y = y0
+    results = []
+    while x < x_end:
+        results.append((x, y))
+        y = y + h * f(x, y)
+        x = x + h
+    results.append((x, y))
+    return results
+
+# Решение дифференциального уравнения методом Улучшенной схемы Эйлера
+def improved_euler(x0, y0, h, x_end):
+    x = x0
+    y = y0
+    results = []
+    while x < x_end:
+        results.append((x, y))
+        y_pred = y + h * f(x, y)
+        y = y + h/2 * (f(x, y) + f(x + h, y_pred))
+        x = x + h
+    results.append((x, y))
+    return results
+
+# Решение дифференциального уравнения методом Рунге-Кутта
+def runge_kutta(x0, y0, h, n):
+    x = x0
+    y = y0
+    for i in range(n):
+        k1 = h * f(x, y)
+        k2 = h * f(x + h/2, y + k1/2)
+        k3 = h * f(x + h/2, y + k2/2)
+        k4 = h * f(x + h, y + k3)
+        y = y + (1/6) * (k1 + 2*k2 + 2*k3 + k4)
+        x = x + h
+    return y
+
+# Метод Гаусса с 2 узлами
+def gauss_2(a, b, f):
+    x1 = -1 / math.sqrt(3)
+    x2 = 1 / math.sqrt(3)
+    A1 = 1
+    A2 = 1
+    return ((b-a)/2) * (A1*f((b-a)/2 * x1 + (b+a)/2) + A2*f((b-a)/2 * x2 + (b+a)/2))
+
+# Метод Гаусса с 3 узлами
+def gauss_3(a, b, f):
+    x1 = -math.sqrt(3/5)
+    x2 = 0
+    x3 = math.sqrt(3/5)
+    A1 = 5/9
+    A2 = 8/9
+    A3 = 5/9
+    return ((b-a)/2) * (A1*f((b-a)/2 * x1 + (b+a)/2) + A2*f((b-a)/2 * x2 + (b+a)/2) + A3*f((b-a)/2 * x3 + (b+a)/2))
+
+# Метод Гаусса с 4 узлами
+def gauss_4(a, b, f):
+    x1 = -math.sqrt((3+2*math.sqrt(6/5))/7)
+    x2 = -math.sqrt((3-2*math.sqrt(6/5))/7)
+    x3 = math.sqrt((3-2*math.sqrt(6/5))/7)
+    x4 = math.sqrt((3+2*math.sqrt(6/5))/7)
+    A1 = (18-math.sqrt(30))/36
+    A2 = (18+math.sqrt(30))/36
+    A3 = A2
+    A4 = A1
+    return ((b-a)/2) * (A1*f((b-a)/2 * x1 + (b+a)/2) + A2*f((b-a)/2 * x2 + (b+a)/2) + A3*f((b-a)/2 * x3 + (b+a)/2) + A4*f((b-a)/2 * x4 + (b+a)/2))
+
+def solve_system_iterative(a, b, epsilon, max_iterations):
+    n = len(a)
+    x = np.zeros(n)
+    iterations = 0
+    while iterations < max_iterations:
+        new_x = np.zeros(n)
+        for i in range(n):
+            sum_ = 0
+            for j in range(n):
+                if j != i:
+                    sum_ += a[i, j] * x[j]
+            new_x[i] = (b[i] - sum_) / a[i, i]
+        if np.linalg.norm(new_x - x) < epsilon:
+            return new_x
+        x = new_x
+        iterations += 1
+    print("Не удалось найти решение методом итераций.")
+
+
+def solve_system_seidel(a, b, epsilon, max_iterations):
+    n = len(a)
+    x = np.zeros(n)
+    iterations = 0
+    while iterations < max_iterations:
+        for i in range(n):
+            sum_1 = sum(a[i, j] * x[j] for j in range(i))
+            sum_2 = sum(a[i, j] * x[j] for j in range(i + 1, n))
+            x[i] = (b[i] - sum_1 - sum_2) / a[i, i]
+        if np.linalg.norm(a @ x - b) < epsilon:
+            return x
+        iterations += 1
+    print("Не удалось найти решение методом Зейделя.")
